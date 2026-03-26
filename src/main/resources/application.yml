@@ -1,0 +1,75 @@
+# Основные настройки приложения
+app:
+  # ВАЖНО: используем camelCase для соответствия полям в BaseConfig
+  sizeOfFork: 1000
+  sizeOfPage: 100
+  imageExtensions: jpg, jpeg, png, bmp, gif, webp
+  maxImageSize: 10485760
+  cacheEnabled: true
+  cacheSize: 100
+
+# Настройки включения/отключения функциональности
+enable:
+  common:
+    logging: true
+
+# Настройки сервера
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+# Настройки Spring
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  aop:
+    proxy-target-class: true
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  web:
+    resources:
+      add-mappings: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+
+# Настройки логирования
+logging:
+  level:
+    #  Текущее приложение
+    com.image: DEBUG
+    org.springframework: WARN
+    org.springdoc: DEBUG  # Добавлено для отладки Swagger
+
+    # Spring AOP
+    org.springframework.aop: DEBUG
+    org.springframework.aop.framework: DEBUG
+    org.springframework.aop.aspectj: DEBUG
+    org.springframework.aop.interceptor: DEBUG
+    org.springframework.aop.support: DEBUG
+    org.springframework.aop.framework.CglibAopProxy: DEBUG
+    org.springframework.aop.framework.JdkDynamicAopProxy: DEBUG
+
+# Настройки Springdoc OpenAPI
+springdoc:
+  api-docs:
+    path: /api-docs  # путь к OpenAPI JSON
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html  # путь к Swagger UI
+    enabled: true
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: method
+    tags-sorter: alpha
+  packages-to-scan: com.image.controllers
+  paths-to-match: /api/**

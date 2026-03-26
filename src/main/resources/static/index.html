@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск дубликатов изображений</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>🔍 Поиск дубликатов изображений</h1>
+
+    <!-- Карточка ввода пути -->
+    <div class="card">
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="folderPathManual">📁 Введите путь к папке:</label>
+                <input type="text" id="folderPathManual" class="form-control"
+                       placeholder="C:\Users\Admin\Pictures\ или /home/user/images/"
+                       value="C:\Users\Admin\OneDrive\Изображения">
+                <small style="color: #7f8c8d; margin-top: 5px; display: block;">
+                    Поддерживаемые форматы: JPG, JPEG, PNG, BMP, GIF, WEBP
+                </small>
+            </div>
+            <button type="submit" class="btn btn-primary" id="startButton">
+                <span id="buttonText">▶ Начать поиск дубликатов</span>
+                <span id="buttonSpinner" class="loading-spinner hidden"></span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Карточка прогресса -->
+    <div class="card progress-container" id="progressContainer" style="display: none;">
+        <h3>📊 Прогресс обработки</h3>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%;">0%</div>
+        </div>
+
+        <div class="stats" id="statsText">⏳ Обработано: 0 из 0 файлов</div>
+        <div class="stats" id="timeText">⌛ Время: 0 сек</div>
+        <div>
+            <span class="status-badge" id="statusBadge">⚪ Ожидание...</span>
+        </div>
+    </div>
+
+    <!-- Карточка результатов -->
+    <div class="card" id="resultContainer" style="display: none;">
+        <div class="toolbar">
+            <h3>📋 Результаты поиска</h3>
+            <div class="toolbar-group">
+                <input type="text" id="searchInput" class="search-box" placeholder="🔍 Поиск по имени...">
+                <select id="groupFilter" class="form-control" style="width: auto;">
+                    <option value="all">Все группы</option>
+                </select>
+                <button class="btn btn-sm btn-success" id="exportBtn" title="Экспортировать в CSV">
+                    📥 Экспорт
+                </button>
+                <button class="btn btn-sm btn-warning" id="selectDuplicatesBtn" title="Выбрать дубликаты для удаления">
+                    🔄 Выбрать дубликаты
+                </button>
+                <button class="btn btn-sm btn-danger" id="deleteSelectedBtn" title="Удалить выбранные файлы" disabled>
+                    🗑️ Удалить выбранное
+                </button>
+                <button class="btn btn-sm" id="clearBtn" title="Очистить результаты">
+                    ✖ Очистить
+                </button>
+            </div>
+        </div>
+
+        <!-- Сводная статистика -->
+        <div class="summary-stats" id="summaryStats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalGroups">0</div>
+                <div class="stat-label">Групп дубликатов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalDuplicateFiles">0</div>
+                <div class="stat-label">Файлов с дубликатами</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalSize">0 MB</div>
+                <div class="stat-label">Общий размер</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="estimatedSpace">0 MB</div>
+                <div class="stat-label">Можно освободить</div>
+            </div>
+        </div>
+
+        <!-- Таблица результатов -->
+        <div class="results-table-container" id="resultsTableContainer">
+            <table class="results-table" id="resultsTable">
+                <thead>
+                <tr>
+                    <th style="width: 3%">
+                        <input type="checkbox" id="selectAll" class="checkbox-select-all">
+                    </th>
+                    <th style="width: 10%">Превью</th>
+                    <th style="width: 25%">Имя файла</th>
+                    <th style="width: 30%">Путь</th>
+                    <th style="width: 8%">Размер</th>
+                    <th style="width: 8%">Тип</th>
+                    <th style="width: 16%">Действия</th>
+                </tr>
+                </thead>
+                <tbody id="resultsBody">
+                <!-- Данные будут вставлены через JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Сообщение при отсутствии результатов -->
+        <div id="noResultsMessage" class="alert alert-info text-center" style="display: none;">
+            🔍 Дубликатов не найдено. Попробуйте выбрать другую папку.
+        </div>
+    </div>
+
+    <!-- Модальное окно для просмотра изображения -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <img id="modalImage" class="modal-image" src="" alt="Image preview">
+            <div class="modal-actions">
+                <button class="btn btn-sm btn-danger" id="modalDeleteBtn">🗑️ Удалить</button>
+                <button class="btn btn-sm btn-copy" id="modalCopyBtn">📋 Копировать путь</button>
+                <button class="btn btn-sm btn-view" id="modalOpenBtn">📂 Открыть в проводнике</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Прогресс удаления -->
+    <div id="deleteProgress" class="delete-progress">
+        <div>🗑️ Удаление файлов... <span id="deleteProgressText">0/0</span></div>
+        <div class="delete-progress-bar">
+            <div id="deleteProgressFill" class="delete-progress-fill" style="width: 0%;"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
