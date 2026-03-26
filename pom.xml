@@ -51,7 +51,7 @@
   </dependencyManagement>
 
   <dependencies>
-    <!-- Базовый стартовый пакет Spring Boot -->
+    <!-- Spring Boot -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
@@ -63,21 +63,21 @@
       </exclusions>
     </dependency>
 
-    <!-- Работа с изображениями -->
+    <!-- working with images -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-imaging</artifactId>
       <version>${commons.imaging.version}</version>
     </dependency>
 
-    <!-- Метаданные изображений -->
+    <!-- Metadata of images -->
     <dependency>
       <groupId>com.drewnoakes</groupId>
       <artifactId>metadata-extractor</artifactId>
       <version>${metadata.extractor.version}</version>
     </dependency>
 
-    <!-- Логи -->
+    <!-- Logs -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -88,7 +88,7 @@
       <version>${logback.classic.version}</version>
     </dependency>
 
-    <!-- Генерация геттеров/сеттеров -->
+    <!-- Getter/Setter -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -96,26 +96,26 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Форматы данных -->
+    <!-- Data format -->
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
       <version>${jackson.yaml.version}</version>
     </dependency>
 
-    <!-- Аспектно-ориентированное программирование -->
+    <!-- AOP -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
 
-    <!-- Веб-сервисы -->
+    <!-- WebServices -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- Тестирование -->
+    <!-- Testing -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -224,7 +224,7 @@
         <version>${surefire.version}</version>
       </plugin>
 
-      <!-- JaCoCo плагин - ПРОСТАЯ КОНФИГУРАЦИЯ -->
+      <!-- JaCoCo plugin -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
